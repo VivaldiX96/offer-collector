@@ -79,22 +79,34 @@ page = driver.page_source
 
 import pandas as pd
  
-class="demand-item-details-number" - numer zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[1]/b[2]
-class="demand-item-details-name" - tytuł zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/a
-class="demand-item-details-category" - kategoria zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[2]
-class="demand-item-to-details" - link do oferty (zawiera pozycję href="") - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/a
-class="demand-item-time" - czas do wygaśnięcia - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/div
+#class="demand-item-details-number" - numer zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[1]/b[2]
+#class="demand-item-details-name" - tytuł zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/a
+#class="demand-item-details-category" - kategoria zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[2]
+#class="demand-item-to-details" - link do oferty (zawiera pozycję href="") - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/a
+#class="demand-item-time" - czas do wygaśnięcia - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/div
 
-oferty = driver.find_elements_by_class_name('demand-item')
+# oferty = driver.find_elements(By.XPATH, '//*[@id="demand-search-wrapper"]/section[3]/section[*]')
+
+oferty = driver.find_elements(By.CLASS_NAME, 'demand-item')
+
+print("Liczba ofert: " + str(len(oferty)))
 
 tabela_ofert = []
 
 for oferta in oferty:
-    numer_oferty = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[1]/b[2]')
-    tytul_oferty = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/a')
-    kategoria_oferty = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[2]')
-    link_do_szczegolow = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/a')
-    pozostaly_czas = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/div')
+    """ numer_oferty = oferta.find_element(By.XPATH, '//*[@id="demand-search-wrapper"]/section[3]/section[*]/div[2]/span[1]/b[2]').text
+    tytul_oferty = oferta.find_element(By.XPATH, '//*[@id="demand-search-wrapper"]/section[3]/section[*]/div[2]/a').text
+    kategoria_oferty = oferta.find_element(By.XPATH, '//*[@id="demand-search-wrapper"]/section[3]/section[*]/div[2]/span[2]').text
+    link_do_szczegolow = oferta.find_element(By.XPATH, '//*[@id="demand-search-wrapper"]/section[3]/section[*]/div[3]/a').text #poprawić
+    pozostaly_czas = oferta.find_element(By.XPATH, '//*[@id="demand-search-wrapper"]/section[3]/section[*]/div[3]/div').text
+     """
+    numer_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-number').text
+    tytul_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-name').text
+    kategoria_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-category').text
+    link_do_szczegolow = oferta.find_element(By.CLASS_NAME, 'demand-item-to-details').text #poprawić
+    pozostaly_czas = oferta.find_element(By.CLASS_NAME, 'demand-item-time').text
+     
+
     obiekt_ofertowy = {
         'numer': numer_oferty,
         'tytul': tytul_oferty,
@@ -107,13 +119,32 @@ for oferta in oferty:
 Orlen_df = pd.DataFrame(tabela_ofert)
 print(Orlen_df)
 
+folder_path = 'folder_na_csv'
+
+import os
+
+# Sprawdź czy folder istnieje, jeśli nie to utwórz
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+
+# Ścieżka do pliku CSV w nowo utworzonym folderze
+file_path = os.path.join(folder_path, 'dane_ofertowe.csv')
+
+# Zapisz listę do pliku CSV
+with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    for row in tabela_ofert:
+        csvwriter.writerow([row])
+
+print(f"Plik CSV został utworzony w folderze {folder_path}")
+
 #soup = BeautifulSoup (html, "html.parser") 
 
 #url = 'https://connect.orlen.pl/servlet/HomeServlet'
 
 #page = requests.get(url)
 
-soup = BeautifulSoup(page, 'html.parser')
+""" soup = BeautifulSoup(page, 'html.parser')
 
 print(soup)
 
@@ -126,18 +157,18 @@ print(f"ilosc znalezionych okienek: {len(okienka)}")
 tresci_okienek = [okienko.get_text() for okienko in okienka]
 
 # Wyświetl listę zawierającą treści okienek
-print(tresci_okienek)
+print(tresci_okienek) """
 
 # # # tworzenie listy wszystkich ofert i wrzucanie jej do csv - CsvNaOferty.py
 # # # PotencjalneProj = CsvNaOferty(html)
 
 
-import os
+
 
 # ... kod wczytywania i przetwarzania danych ...
 
 # Ścieżka do nowo utworzonego folderu
-folder_path = 'folder_na_csv'
+""" folder_path = 'folder_na_csv'
 
 # Sprawdź czy folder istnieje, jeśli nie to utwórz
 if not os.path.exists(folder_path):
@@ -153,7 +184,7 @@ with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
         csvwriter.writerow([row])
 
 print(f"Plik CSV został utworzony w folderze {folder_path}")
-
+ """
 czekaj = input() #dodatkowy dummy task do oczekiwania bez zamykania przeglądarki
 
 # Ustawienie opcji zamykania okna na False
