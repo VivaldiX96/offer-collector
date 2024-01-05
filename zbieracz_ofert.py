@@ -65,21 +65,55 @@ orlen_expandclicker()
 
 
 # Pobierz kod HTML strony
-html = driver.page_source
+#html = driver.page_source
 
 # webscraper()
 from bs4 import BeautifulSoup 
 import requests 
 import csv
 
-# page_to_scrape = driver.get("https://connect.orlen.pl/servlet/HomeServlet") 
+driver.get("https://connect.orlen.pl/servlet/HomeServlet") 
+
+# Pobranie widocznej treści z przeglądarki
+page = driver.page_source
+
+import pandas as pd
+ 
+class="demand-item-details-number" - numer zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[1]/b[2]
+class="demand-item-details-name" - tytuł zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/a
+class="demand-item-details-category" - kategoria zapytania - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[2]
+class="demand-item-to-details" - link do oferty (zawiera pozycję href="") - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/a
+class="demand-item-time" - czas do wygaśnięcia - XPATH: //*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/div
+
+oferty = driver.find_elements_by_class_name('demand-item')
+
+tabela_ofert = []
+
+for oferta in oferty:
+    numer_oferty = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[1]/b[2]')
+    tytul_oferty = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/a')
+    kategoria_oferty = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[2]/span[2]')
+    link_do_szczegolow = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/a')
+    pozostaly_czas = oferta.find_element_by_xpath('.//*[@id="demand-search-wrapper"]/section[3]/section[8]/div[3]/div')
+    obiekt_ofertowy = {
+        'numer': numer_oferty,
+        'tytul': tytul_oferty,
+        'kategoria': kategoria_oferty,
+        'link': link_do_szczegolow,
+        'pozostaly czas': pozostaly_czas
+    }
+    tabela_ofert.append(obiekt_ofertowy)
+
+Orlen_df = pd.DataFrame(tabela_ofert)
+print(Orlen_df)
+
 #soup = BeautifulSoup (html, "html.parser") 
 
-url = 'https://connect.orlen.pl/servlet/HomeServlet'
+#url = 'https://connect.orlen.pl/servlet/HomeServlet'
 
-page = requests.get(url)
+#page = requests.get(url)
 
-soup = BeautifulSoup(page.text, 'html')
+soup = BeautifulSoup(page, 'html.parser')
 
 print(soup)
 
