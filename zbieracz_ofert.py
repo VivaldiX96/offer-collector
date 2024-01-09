@@ -15,12 +15,22 @@
     # wysłanie danych z jednej oferty do Chatu GPT - zbieracz ofert .py (główny program)
     # wrzucanie ofert oznaczonych przez chat jako "1" do katalogu ofert do rozpatrzenia
 
+# !!! zainstalowane pakiety (doinstalować na docelowym komputerze przed uruchomieniem programu):
+    # pip install selenium
+    # https://googlechromelabs.github.io/chrome-for-testing/ - https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/win64/chromedriver-win64.zip
+    # pip install openpyxl
+    # pip install beautifulsoup4
+    # node-v20.10.0-x64
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-# import webscraper
+from pathlib import Path
+import posixpath
+
+# import webscraper # <- zaimportowanie drugiego modułu programu
 
 #dodane opcje w celu niezamykania przeglądarki - na razie niekoniecznie działają
 #options = webdriver.ChromeOptions()
@@ -29,7 +39,8 @@ import time
 # Inicjalizacja przeglądarki (w tym przypadku Google Chrome)
 driver = webdriver.Chrome()
 
-# Przechodzimy na stronę, która zawiera listę ofert - tutaj strona Orlenu
+# Przechodzimy na stronę, która zawiera listę ofert - tutaj strona Orlenu; pobranie widocznej treści z przeglądarki
+
 driver.get('https://connect.orlen.pl/servlet/HomeServlet')
 
 
@@ -65,14 +76,8 @@ orlen_expandclicker()
 
 
 # webscraper()
-from bs4 import BeautifulSoup 
-import requests 
-import csv
 
-driver.get("https://connect.orlen.pl/servlet/HomeServlet") 
 
-# Pobranie widocznej treści z przeglądarki
-page = driver.page_source
 
 import pandas as pd
  
@@ -102,9 +107,14 @@ for oferta in oferty:
 Orlen_df = pd.DataFrame(tabela_ofert)
 print(Orlen_df)
 
-#Orlen_df_csv = Orlen_df.to_csv("tabela ofert.csv")
-
 import os
+
+#ustalenie ścieżki, gdzie będzie umieszczony ten plik .py i zmiana ściezki na aktualną
+dir_path = os.path.dirname(os.path.realpath(__file__))
+os.chdir(dir_path)
+
+# print(f"ścieżka folderu roboczego: {Path.cwd()}") ### - te dwie liinijki można aktywować w celach kontrolnych
+# print(f"ścieżka pliku Python: {Path(__file__)}") ### - pozwalają sprawdzić, gdzie jest program i gdzie zapisze pliki
 
 # nazwa nowego folderu na csv
 folder_path = 'folder_na_csv'
@@ -113,26 +123,30 @@ folder_path = 'folder_na_csv'
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
 
+
+# Załóżmy, że masz DataFrame o nazwie df i zmienną folder_path zawierającą ścieżkę do folderu
+nazwa_pliku_excel = 'Arkusz_ofert.xlsx'
+sciezka_do_pliku_excel = os.path.join(folder_path, nazwa_pliku_excel)
+
+# Teraz możesz zapisać DataFrame do pliku <link>Excel</link> pod wskazaną ścieżką
+Orlen_df.to_excel(sciezka_do_pliku_excel, index=False, sheet_name='Wstępne_oferty')
+
 # Ścieżka do pliku CSV w nowo utworzonym folderze
 file_path = os.path.join(folder_path, 'tabela_ofert.csv')
 print(f"ścieżka pliku: {file_path}")
 
 # Zapisz listę do pliku CSV
 #Orlen_df.to_csv(file_path, index=False)
-Orlen_df.to_csv(file_path, mode='w', encoding='utf-8-sig', index=False)
-
-""" with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
-    csvwriter = csv.writer(csvfile)
-    for row in tabela_ofert:
-        csvwriter.writerow([row]) """
-
+Orlen_df.to_csv(file_path, mode='w', encoding='utf-8-sig', index=False) 
 print(f"Plik CSV został utworzony w folderze {folder_path}")
 
-#soup = BeautifulSoup (html, "html.parser") 
 
-#url = 'https://connect.orlen.pl/servlet/HomeServlet'
+# Dopisz do istniejącego arkusza Excel
+#with pd.ExcelWriter('arkusz_ofert.xlsx', mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:   
+    #Orlen_df.to_excel(writer, sheet_name='Wstępne_oferty2') #kod do opracowania by dopisywał linijki na tej samej stronie, a poprzednie przesuwał w dół
 
-#page = requests.get(url)
+
+
 
 
 # # # tworzenie listy wszystkich ofert i wrzucanie jej do csv - CsvNaOferty.py
@@ -142,37 +156,9 @@ print(f"Plik CSV został utworzony w folderze {folder_path}")
 
 
 # ... kod wczytywania i przetwarzania danych ...
-""" 
-# Ścieżka do nowo utworzonego folderu
-folder_path = 'folder_na_csv'
 
-# Sprawdź czy folder istnieje, jeśli nie to utwórz
-if not os.path.exists(folder_path):
-    os.makedirs(folder_path)
-
-# Ścieżka do pliku CSV w nowo utworzonym folderze
-file_path = os.path.join(folder_path, 'dane_ofertowe.csv')
-
-# Zapisz listę do pliku CSV
-with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
-    csvwriter = csv.writer(csvfile)
-    for row in Orlen_df:
-        csvwriter.writerow([row])
-
-print(f"Plik CSV został utworzony w folderze {folder_path}")
- """
 czekaj = input() #dodatkowy dummy task do oczekiwania bez zamykania przeglądarki
 
 # Ustawienie opcji zamykania okna na False
 # driver.close()  # nie zamknie okna
 
-# Zamykamy przeglądarkę po zakończeniu
-#---dla testu nie zamykamy przeglądarki aby sprawdzić czy lista się rozwija--- driver.quit()
-
-
-
-
-
-###from bs4 import BeautifulSoup 
-###import requests 
-###import csv
