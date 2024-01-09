@@ -27,7 +27,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-from pathlib import Path
+import pathlib
 import posixpath
 
 # import webscraper # <- zaimportowanie drugiego modułu programu
@@ -46,25 +46,6 @@ driver.get('https://connect.orlen.pl/servlet/HomeServlet')
 
 # Ustawiamy maksymalny czas oczekiwania na znalezienie elementu (np. przycisku "Pokaż więcej")
 wait = WebDriverWait(driver, 10)
-
-# Pętla do klikania przycisku "Pokaż więcej" dopóki jest dostępny
-# while True: #POCZĄTEK KOMENTARZA na pętlę rozwijającą całą listę
-#     try:
-#         # Znajdujemy przycisk "Pokaż więcej" używając XPath lub innego selektora
-#         show_more_button = wait.until(EC.element_to_be_clickable((By.XPATH, 'xpath_do_przycisku')))
-        
-#         # Klikamy przycisk "Pokaż więcej"
-#         show_more_button.click()
-
-#         # Tutaj możesz dodać kod do sczytywania kolejnych elementów z listy na stronie
-#         # np. elementy = driver.find_elements(By.XPATH, 'xpath_do_elementow')
-
-#     except:
-#         # Jeśli nie ma już przycisku "Pokaż więcej", przerywamy pętlę
-#         break
-
-# # Zamykamy przeglądarkę po zakończeniu   #KONIEC KOMENTARZA na pętlę rozwijającą całą listę
-# driver.quit()
 
 def orlen_expandclicker():
     for licznik in range(1, 6):  # wersja testowa - z 5-krotnym kliknięciem przycisku
@@ -92,7 +73,7 @@ for oferta in oferty:
     numer_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-number').text
     tytul_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-name').text
     kategoria_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-category').text
-    link_do_szczegolow = oferta.find_element(By.CLASS_NAME, 'demand-item-to-details').get_attribute("href") #sprawdzić
+    link_do_szczegolow = oferta.find_element(By.CLASS_NAME, 'demand-item-to-details').get_attribute("href")
     pozostaly_czas = oferta.find_element(By.CLASS_NAME, 'demand-item-time').text
      
     obiekt_ofertowy = {
@@ -107,14 +88,18 @@ for oferta in oferty:
 Orlen_df = pd.DataFrame(tabela_ofert)
 print(Orlen_df)
 
+
+
 import os
 
 #ustalenie ścieżki, gdzie będzie umieszczony ten plik .py i zmiana ściezki na aktualną
 dir_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(dir_path)
 
-# print(f"ścieżka folderu roboczego: {Path.cwd()}") ### - te dwie liinijki można aktywować w celach kontrolnych
-# print(f"ścieżka pliku Python: {Path(__file__)}") ### - pozwalają sprawdzić, gdzie jest program i gdzie zapisze pliki
+
+
+### print(f"ścieżka folderu roboczego: {Path.cwd()}") ### - te dwie linijki można aktywować w celach kontrolnych
+### print(f"ścieżka pliku Python: {Path(__file__)}") ### - pozwalają sprawdzić, gdzie jest program i gdzie zapisze pliki
 
 # nazwa nowego folderu na csv
 folder_path = 'folder_na_csv'
@@ -122,23 +107,33 @@ folder_path = 'folder_na_csv'
 # Sprawdź czy folder istnieje, jeśli nie to utwórz
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
+    print(f"Folder o nazwie {folder_path} jeszcze nie istnieje w katalogu roboczym; \n tworzenie nowego folderu {folder_path}...")
 
 
 # Załóżmy, że masz DataFrame o nazwie df i zmienną folder_path zawierającą ścieżkę do folderu
 nazwa_pliku_excel = 'Arkusz_ofert.xlsx'
 sciezka_do_pliku_excel = os.path.join(folder_path, nazwa_pliku_excel)
 
+# importowanie poprzednio wygenerowanego arkusza, jeśli istnieje
+if os.path.isfile(sciezka_do_pliku_excel):
+    # Wczytanie pliku Excel do obiektu DataFrame
+    Poprzedni_Orlen_df = pd.read_excel(sciezka_do_pliku_excel)
+else:
+    # komunikat o braku poprzedniego arkusza i o lokacji utworzeniu nowego
+    print(f"Plik o nazwie {nazwa_pliku_excel} jeszcze nie istnieje w katalogu roboczym; \n tworzenie nowego pliku w folderze {folder_path}...")
+
 # Teraz możesz zapisać DataFrame do pliku <link>Excel</link> pod wskazaną ścieżką
 Orlen_df.to_excel(sciezka_do_pliku_excel, index=False, sheet_name='Wstępne_oferty')
 
 # Ścieżka do pliku CSV w nowo utworzonym folderze
 file_path = os.path.join(folder_path, 'tabela_ofert.csv')
-print(f"ścieżka pliku: {file_path}")
+absolute_path = os.path.abspath(file_path)
+#print(f"ścieżka pliku: {absolute_path}")
 
 # Zapisz listę do pliku CSV
 #Orlen_df.to_csv(file_path, index=False)
 Orlen_df.to_csv(file_path, mode='w', encoding='utf-8-sig', index=False) 
-print(f"Plik CSV został utworzony w folderze {folder_path}")
+print(f"Plik CSV został utworzony w folderze {folder_path}.\nŚcieżka pliku: {absolute_path}")
 
 
 # Dopisz do istniejącego arkusza Excel
