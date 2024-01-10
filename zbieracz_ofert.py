@@ -3,14 +3,17 @@
 
     # klikacz przycisku "Pokaż więcej" - na początku 5 razy a nie do końca listy ✓
     # tworzenie listy wszystkich ofert i wrzucanie jej do csv - CsvNaOferty.py
-        # włączenie filtru kategorii na stronie aby widać było mniej niepotrzebnych ofert do analizy
+        # opcjonalnie - włączenie filtru kategorii na stronie aby widać było mniej niepotrzebnych ofert do analizy (na razei rozwiązane filtrowaniem zebranych ofert w obiekcie Dataframe)
     # wejście na stronę dedykowaną pojedynczej ofercie - ReadOffer.py
-        # sczytanie danych pojedynczej oferty
-        # podzielenie tych danych na kategorie
+        # pobranie dokumentu (pdf, doc, etc.) ze szczegółowym opisem oferty
+        # sczytanie tekstu z dokumentu pojedynczej oferty
+        # sprawdzenie obecności wadium lub pokrewnego określenia - można zrobić programem do procesowania mowy
+        # wysłanie opisu oferty do AI w celu streszczenia
 
         # odfiltrowanie ofert oczywistych na podstawie nagłówków (dla późniejszego 
         # / zmniejszenia liczby zapytań do czatu GPT) - CsvNaOferty.py (dodatkowa funkcjonalność)
 
+    # 
     # ustawienie chatowi GPT stałych kryteriów oceny i stałego polecenia zwracania 0 lub 1 - ChatEvaluation.py
     # wysłanie danych z jednej oferty do Chatu GPT - zbieracz ofert .py (główny program)
     # wrzucanie ofert oznaczonych przez chat jako "1" do katalogu ofert do rozpatrzenia
@@ -21,6 +24,8 @@
     # pip install openpyxl
     # pip install beautifulsoup4
     # node-v20.10.0-x64
+    # pip install pyttsx3 - do rozpoznawania mowy
+    # pip install SpeechRecognition
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -56,7 +61,7 @@ def orlen_expandclicker():
 orlen_expandclicker()
 
 
-# webscraper()
+# webscraper() # początek
 
 
 
@@ -86,9 +91,14 @@ for oferta in oferty:
     tabela_ofert.append(obiekt_ofertowy)
 
 Orlen_df = pd.DataFrame(tabela_ofert)
+
+#kod filtrujący obiekty ofertowe po kategorii
+Orlen_df = Orlen_df[Orlen_df.kategoria.str.contains('Dokumentacja - projekty techniczne')]
+print(f"Liczba ofert z kategorii \"Wykonanie projektów\": {len(Orlen_df.index)}")
 print(Orlen_df)
 
-
+## ## do zrobienia - wyszukiwanie informacji o wadium
+slowa_kluczowe_wadium = {'wadium', 'akonto', 'forszus', 'gwarancja pieniężna', 'kaucja', 'przedpłata', 'rękojmia', 'zabezpieczenie', 'zadatek', 'zaliczka', 'zastaw'}
 
 import os
 
@@ -107,7 +117,7 @@ folder_path = 'folder_na_csv'
 # Sprawdź czy folder istnieje, jeśli nie to utwórz
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
-    print(f"Folder o nazwie {folder_path} jeszcze nie istnieje w katalogu roboczym; \n tworzenie nowego folderu {folder_path}...")
+    print(f"Folder o nazwie {folder_path} jeszcze nie istnieje w katalogu roboczym; \ntworzenie nowego folderu {folder_path}...")
 
 
 # Załóżmy, że masz DataFrame o nazwie df i zmienną folder_path zawierającą ścieżkę do folderu
@@ -118,12 +128,34 @@ sciezka_do_pliku_excel = os.path.join(folder_path, nazwa_pliku_excel)
 if os.path.isfile(sciezka_do_pliku_excel):
     # Wczytanie pliku Excel do obiektu DataFrame
     Poprzedni_Orlen_df = pd.read_excel(sciezka_do_pliku_excel)
+    print("Aktualizacja pliku excel...")
+
+    #### newdf=pd.concat([Poprzedni_Orlen_df, Orlen_df]).drop_duplicates(keep=False) # kod do uzyskania różnicy starego i nowego Df
+
+    # łączenie poprzedniego arkusza z nowym
+    Orlen_df_nowe_rzedy = Orlen_df.merge(Poprzedni_Orlen_df, on='numer', how='outer', indicator=True)
+    print(f"Nowy arkusz z indykatorami dla sprawdzenia: {Orlen_df_nowe_rzedy}")
+    
+    # wybierz tylko nowe rzędy
+    nowe_rzedy = Orlen_df_nowe_rzedy.query('_merge == "left_only"').drop(columns=['_merge'])
+
+    # wynikowy DataFrame
+    print(f"nowe oferty: \n{nowe_rzedy}")
+
+    # nowy Dataframe bez kolumny indicator, który zostanie wyeksportowany do excela:
+    Orlen_df = Orlen_df.merge(Poprzedni_Orlen_df, on='numer', how='outer', indicator=False)
+
+    print(f"Nowy plik excel: {Orlen_df}")
+
 else:
     # komunikat o braku poprzedniego arkusza i o lokacji utworzeniu nowego
-    print(f"Plik o nazwie {nazwa_pliku_excel} jeszcze nie istnieje w katalogu roboczym; \n tworzenie nowego pliku w folderze {folder_path}...")
+    print(f"Plik o nazwie {nazwa_pliku_excel} jeszcze nie istnieje w folderze w katalogu roboczym; \ntworzenie nowego pliku w folderze {folder_path}...")
+
 
 # Teraz możesz zapisać DataFrame do pliku <link>Excel</link> pod wskazaną ścieżką
 Orlen_df.to_excel(sciezka_do_pliku_excel, index=False, sheet_name='Wstępne_oferty')
+sciezka_do_pliku_excel_abs = os.path.abspath(sciezka_do_pliku_excel)
+print(f"Arkusz Excel został utworzony w folderze {folder_path}.\nŚcieżka pliku: {sciezka_do_pliku_excel_abs}")
 
 # Ścieżka do pliku CSV w nowo utworzonym folderze
 file_path = os.path.join(folder_path, 'tabela_ofert.csv')
