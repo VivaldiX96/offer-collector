@@ -24,6 +24,10 @@
     # pip install openpyxl
     # pip install beautifulsoup4
     # node-v20.10.0-x64
+    # pip install --upgrade pymupdf - do rozpoznawania tekstu w pdf-ach
+    # pip install PyMuPDF - biblioteki do czytania pdf; w kodzie - import fitz # imports the pymupdf library
+    # pip install pillow - wykrywanie obrazówi tekstu w obrazach
+    # pip install python-docx - biblioteki do zapisywania dokumentów z formatowaniem - 
     # pip install pyttsx3 - do rozpoznawania mowy
     # pip install SpeechRecognition
 
@@ -97,8 +101,6 @@ Orlen_df = Orlen_df[Orlen_df.kategoria.str.contains('Dokumentacja - projekty tec
 print(f"Liczba ofert z kategorii \"Wykonanie projektów\": {len(Orlen_df.index)}")
 print(Orlen_df)
 
-## ## do zrobienia - wyszukiwanie informacji o wadium
-slowa_kluczowe_wadium = {'wadium', 'akonto', 'forszus', 'gwarancja pieniężna', 'kaucja', 'przedpłata', 'rękojmia', 'zabezpieczenie', 'zadatek', 'zaliczka', 'zastaw'}
 
 import os
 
