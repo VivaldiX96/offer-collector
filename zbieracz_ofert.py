@@ -26,20 +26,47 @@
     # node-v20.10.0-x64
     # pip install --upgrade pymupdf - do rozpoznawania tekstu w pdf-ach
     # pip install PyMuPDF - biblioteki do czytania pdf; w kodzie - import fitz # imports the pymupdf library
+    # pip install openai - instalacja pakietu do porozumiewania się z Chatem GPT
+    # pip install streamlit - do interfejsu z opcją wpisywania instrukcji dla asystenta AI
+    # pip install googletrans - do tłumaczenia tekstu dokumentu z polskiego na angielski dla AI do interpretacji w module LLAMA2_query_generator.py
+    # pip install replicate - do porozumiewania się z AI z poziomu programu zamiast interfejsu ręcznego
+    
+    # Jeszcze nieużyte:
     # pip install pillow - wykrywanie obrazówi tekstu w obrazach
     # pip install python-docx - biblioteki do zapisywania dokumentów z formatowaniem - 
     # pip install pyttsx3 - do rozpoznawania mowy
     # pip install SpeechRecognition
+
+###aktualny zakresz rzeczy do sprawdzenia: sprawdzić, który tokenizer do LLAMA 2 radzi sobie najlepiej z językiem polskim, sprawdzić jak zwiększyć lub ominąć limit znaków w chacie - może załatwi to odpowiedni tokenizer lub langchain?
+### wprowadzanie promptów systemowych: https://www.youtube.com/watch?v=PqcNqyd13Kw
+### fine-tuning dla modeli wielojęzykowych: https://www.youtube.com/watch?v=ThKWQcyQXF8
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import streamlit as st
 import pathlib
 import posixpath
 
 # import webscraper # <- zaimportowanie drugiego modułu programu
+
+Replicate_API_token = 'abc'
+
+detailed_instructions = None
+
+#dodać na początku opcje w postaci radio buttons w okienku programu dla wyboru trybu działania tuż po włączeniu programu - domyślnie ustawiony podstawowy tryb, i uruchomienie podstawowego trybu po 10 sekundach od włączenia programu jeśli użytkownik nie przełączy trybu działania
+
+instr_options = {
+                 "DEFAULT": "detect_deposit_and_reqs", #wykrywanie informacji czy jest wymagane wadium, gwarancja, a także czy są wymagania względem architekta (np. wykonane wcześniej podobne projekty)
+                 "SUMMARY": "offer summary", #streszczenie oferty w paru do parunastu zdaniach
+                 "GPT_DETAILS": detailed_instructions #szczegółowe instrukcje do zaimplementowania dla chatu GPT - znajdowanie innych szczegółów na życzenie
+                }
+
+
+
+
 
 #dodane opcje w celu niezamykania przeglądarki - na razie niekoniecznie działają
 #options = webdriver.ChromeOptions()

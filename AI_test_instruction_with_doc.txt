@@ -1,0 +1,177 @@
+Znajdź w tekście umieszczonym w potrójnym cudzysłowiu istotne informacje, takie jak:
+1. Czy Wykonawca musi wnieść zabezpieczenie pieniężne przed wykonaniem zlecenia?
+2. Czy Wykonawca musi posiadać dodatkowe uprawnienia lub przeszłe doświadczenie w wykonywaniu zleceń lub zamówień podobnych typu do tego, które omawiane jest w tym dokumencie?
+
+Podaj odpowiedź w dwóch linijkach odpowiadających powyższym pytaniom, przy czym w każdej linijce ma się znaleźć tylko liczba 0 jeśli odpowiedź na pierwsze pytanie brzmi "nie" albo liczba 1 jeśli odpowiedź brzmi "tak".
+Poniżej podaję treść dokumentu do odczytania i przeanalizowania:
+
+"""
+Zapytanie ofertowe na wykonanie
+projektu budowlano – wykonawczego nN/SN (RKW)
+I. Zamawiający
+ENERGA-OPERATOR SPÓŁKA AKCYJNA z siedzibą w Gdańsku przy ulicy Marynarki Polskiej 130, 80-557
+Gdańsk, Oddział w Kalisz z siedzibą w Kaliszu przy Al. Wolności 8, 62-800 Kalisz, wpisana do Krajowego
+Rejestru Sądowego – Rejestru Przedsiębiorców pod numerem KRS 0000033455, której akta rejestrowe
+prowadzi Sąd Rejonowy Gdańsk-Północ w Gdańsku, VII Wydział Gospodarczy Krajowego Rejestru
+Sądowego, NIP 5830001190, REGON 190275904, z kapitałem zakładowym wpłaconym w całości
+w wysokości: 1 356 110 400,00 zł.
+Strona internetowa: energa-operator.pl
+II. Postanowienia ogólne
+1) Niniejsze postępowanie prowadzone jest w oparciu o przepisy Kodeksu cywilnego (Dz.U. z 2022 r.
+poz. 1360, z późn.zm.) oraz przepisy Instrukcji Zakupowej obowiązującej w Energa Operator SA,
+której Wyciąg znajduje się na stronach:
+https://bip.energa-operator.pl/s/20394/procedury-regulaminy-wytyczne
+https://energa-operator.pl/dostawcy-i-przetargi/regulaminy-i-warunki
+2) Postępowanie zakupowe prowadzone jest na Platformie Zakupowej CONNECT pod adresem:
+https://connect.orlen.pl/servlet/HomeServlet?fromOrg=eop
+3) Udział w postępowaniu jest możliwy wyłącznie dla Wykonawców posiadających konto na Platformie
+Zakupowej CONNECT. Brak konta na Platformie Zakupowej CONNECT, uniemożliwi udział w
+postępowaniu.
+4) W przypadku problemów technicznych, m.in. z założeniem konta na Platformie Zakupowej
+CONNECT, udziałem w postępowaniu lub aukcji, dostępna jest pomoc techniczna (obsługa
+Platformy – Hot Line) pod numerem telefonu +48 22 576 87 95, +48 22 382 19 99 w godz. 8.00 –
+17.00 w dni robocze od poniedziałku do piątku, z wyłączeniem dni ustawowo wolnych od pracy.
+III. Opis przedmiotu zamówienia
+1) Przedmiot zamówienia obejmuje swoim zakresem wykonanie projektu budowlano-wykonawczego.
+2) Przedmiot zamówienia należy wykonać zgodnie ze standardami technicznymi, zakresem
+prekwalifikacji materiałów obowiązującymi u Zamawiającego oraz zasadami sztuki budowlanej w
+oparciu o materiały stanowiące załączniki do niniejszego Zapytania ofertowego:
+• warunki techniczne przyłączenia do sieci/warunki techniczne przebudowy
+sieci/założenia techniczne/warunki budowy sieci/dane programowe;
+• pozostałe materiały: plan lokalizacji obiektu/ogólne założenia techniczne z
+określonym zakresem/schemat;
+• Specyfikacja Techniczna Wykonania i Odbioru Prac Projektowych;
+• lub inne dokumenty.2
+IV. Terminy
+1) Termin składania ofert - został określony w Platformie Zakupowej CONNECT.
+2) Termin realizacji zadania - został określony w Platformie Zakupowej CONNECT w polu „Opis”.
+3) Termin związania ofertą - 60 dni, przy czym pierwszym dniem terminu związania ofertą jest dzień,
+w którym upływa termin składania ofert, zgodnie z wymaganiami Zamawiającego określonymi w
+pkt. VI niniejszego Zapytania ofertowego.
+4) Wykonawca zobowiązany jest potwierdzić ww. termin związania ofertą, składając na Platformie
+Zakupowej CONNECT kompletne oświadczenie o spełnianiu warunków formalnych.
+5) W przypadku wskazania przez Wykonawcę na etapie składania oferty na Platformie Zakupowej
+CONNECT terminu związania ofertą krótszego niż 60 dni od daty upływu terminu składania ofert,
+wiążący jest termin 60 dni określony przez Zamawiającego.
+V. Sposób porozumiewania się w postępowaniu, udzielanie wyjaśnień i wprowadzanie zmian
+1) Wykonawca może zwrócić się do Zamawiającego o wyjaśnienie treści Zapytania ofertowego,
+przekazując pytanie za pośrednictwem Platformy Zakupowej CONNECT, z wykorzystaniem
+funkcjonalności: „zadaj pytanie Zamawiającemu”.
+2) Zamawiający zastrzega, że ma prawo nie udzielić odpowiedzi, jeżeli pytanie wpłynęło do
+Zamawiającego na mniej niż 3 dni robocze przed otwarciem ofert.
+3) Komunikacja między Zamawiającym a Wykonawcami (w tym wszelkie pytania, oświadczenia,
+wnioski, zawiadomienia oraz inne informacje) odbywa się wyłącznie za pośrednictwem Platformy
+Zakupowej CONNECT. Próby komunikacji ze strony Wykonawcy w innej formie nie wywołują
+skutków, jakie zostały przewidziane dla oświadczeń, wniosków, pytań i innych form komunikacji za
+pośrednictwem Platformy Zakupowej CONNECT.
+4) Odpowiedzi na pytania zostaną opublikowane na Platformie Zakupowej CONNECT, bez ujawniania
+źródła zapytania.
+5) W uzasadnionych przypadkach Zamawiający może w każdym czasie przed upływem terminu
+składania ofert zmienić treść Zapytania ofertowego, publikując zmiany na Platformie Zakupowej
+CONNECT w strefie publicznej.
+VI. Warunki udziału
+O udzielenie zamówienia może ubiegać się Wykonawca, który:
+1) spełnia wymagania formalne: w dniu otwarcia ofert znajduje się w Rejestrze Kwalifikowanych
+Wykonawców (RKW) prowadzonym przez ENERGA-OPERATOR S.A., posiada wpis na wymagany zakres
+współpracy niezbędny do realizacji przedmiotowego zamówienia, nie jest zawieszony lub wykluczony
+w prawach RKW, spełnia wszystkie warunki udziału w postępowaniu określone przez Zamawiającego
+w Zapytaniu ofertowym;
+Wykonawcy, którzy nie znajdują się w RKW, zobowiązani są do pobrania wniosku zgłoszeniowego ze
+strony internetowej: https://bip.energa-operator.pl/s/20394/procedury-regulaminy-wytyczne oraz
+zapoznania się z dostępną pod tym adresem Procedurą RKW. Wypełniony wniosek wraz z
+wymaganymi dokumentami należy złożyć w ENERGA Logistyka sp. z o.o. Wydział Zakupów
+Operacyjnych, 80-870 Gdańsk, ul. M. Reja 29 w celu weryfikacji. Wymagane dokumenty należy
+dostarczyć w formie oryginału lub kserokopii poświadczonej za zgodność z oryginałem przez osobę
+upoważnioną do reprezentacji Wykonawcy zgodnie z dokumentami rejestrowymi.
+2) spełnia warunki udziału w postępowaniu:
+a) jest uprawniony do występowania w obrocie prawnym;
+b) prowadzi działalność w zakresie objętym przedmiotem zamówienia;
+c) dysponuje osobami zdolnymi do wykonania przedmiotu zamówienia;
+d) znajduje się w sytuacji ekonomicznej i finansowej zapewniającej wykonanie zamówienia;
+e) jest czynnym podatnikiem podatku VAT;3
+f) nie zalega z opłacaniem podatków i składek na ubezpieczenia;
+g) zapoznał się z dokumentami z postępowania zakupowego, nie wnosi do nich zastrzeżeń,
+akceptuje je w całości i składa ofertę zgodną z wymogami określonymi przez Zamawiającego;
+h) zapoznał się z Ogólnymi Warunkami Umów oraz projektem umowy i akceptuje je bez
+zastrzeżeń oraz zobowiązuje się do podpisania umowy w miejscu i terminie wskazanym przez
+Zamawiającego;
+i) dokumenty złożone w RKW na dzień otwarcia ofert pozostają aktualne;
+j) uwzględnił w cenie podanej w ofercie wszystkie koszty niezbędne do wykonania przedmiotu
+zamówienia;
+k) jest związany ofertą przez okres 60 dni od daty upływu terminu składania ofert;
+l) zobowiązuje się do przestrzegania w trakcie realizacji zamówienia standardów technicznych
+oraz stosowania materiałów dopuszczonych przez Zamawiającego w procesie prekwalifikacji,
+dostępnym na stronie internetowej Zamawiającego pod adresem http://www.energaoperator.pl/centrum_informacji/instrukcje_i_standardy.xml
+m) zobowiązuje się do przestrzegania w trakcie realizacji prac procedur obowiązujących u
+Zamawiającego, a w szczególności do postępowania zgodnie z wymogami Ustawy Prawo
+Ochrony Środowiska Dz.U. 2001.62.627 (z późn. zm.), Ustawy o Odpadach Dz.U.2001.62.628
+(z późn. zm.), Ustawy o ochronie zabytków i opiece nad zabytkami Dz. U. 2003.162.1568 (z
+późn. zm.), Ustawy o ochronie przyrody Dz. U.2004.92.880 (z późn. zm.);
+n) zapoznał się z warunkami terenowymi w miejscu realizacji przedmiotu zamówienia;
+o) zapoznał się i akceptuje Kodeks postępowania dla Dostawców (dostępny na stronie
+https://bip.energa-operator.pl/przetargi-zamowieniaogloszenia?section=443&section=449&section=455&section=461&section=467&section=473
+&section=479
+3) spełnia wszystkie wymagania określone w treści „Oświadczenia oferenta” na Platformie Zakupowej
+CONNECT.
+VII. Wymagane oświadczenia
+1) Wykonawca zobowiązany jest na Platformie Zakupowej CONNECT:
+a) potwierdzić warunek formalny: wpisu do RKW, aktualności wpisu na wymagany zakres
+niezbędny do realizacji przedmiotowego zamówienia, braku zawieszenia lub wykluczenia w
+prawach RKW oraz spełniania warunków udziału w postępowaniu określonych w Zapytaniu
+ofertowym;
+b) potwierdzić spełnienie warunków określonych w treści „Oświadczenia oferenta” dostępnego
+na Platformie Zakupowej CONNECT;
+VIII. Sposób złożenia oferty
+1) Ofertę należy złożyć na Platformie Zakupowej CONNECT pod adresem:
+https://connect.orlen.pl/servlet/HomeServlet?fromOrg=eop poprzez wypełnienie wymaganych pól, w
+terminie wyznaczonym na składanie ofert, określonym na ww. Platformie. Oferty przesłane inną drogą
+nie będą rozpatrywane i uwzględniane podczas wyboru kontrahenta.
+2) Rozliczenie między Zamawiającym a Wykonawcą będzie prowadzone w walucie PLN.
+3) Na Platformie Zakupowej CONNECT należy podać wartość netto oferty.
+4) Wartość netto podana w ofercie powinna zawierać wszystkie koszty i elementy związane z
+wykonaniem przedmiotu zamówienia.
+5) Wartość oferty netto stanowi wartość wyrażoną w jednostkach pieniężnych, którą Zamawiający
+zobowiązany jest zapłacić Wykonawcy za realizację przedmiotu zamówienia.
+6) Złożenie ofert jest możliwe wyłącznie dla Wykonawców, którzy posiadają konto na Platformie
+Zakupowej CONNECT.
+7) Wszystkie koszty związane z przygotowaniem i sporządzeniem oferty ponosi Wykonawca.
+8) Zamawiający nie dopuszcza składania ofert na część zamówienia.
+9) Zamawiający nie dopuszcza składania ofert wariantowych.4
+IX. Kryteria oceny ofert
+O wyborze najkorzystniejszej oferty decydować będzie najniższa wartość netto za wykonanie przedmiotu
+zamówienia, z wagą 100%.
+X. Wybór oferty
+1) Postępowanie o udzielenie zamówienia jest niejawne.
+2) W toku badania i oceny złożonych ofert, Zamawiający może żądać od Wykonawców wyjaśnień
+dotyczących treści złożonych przez nich ofert lub ich uzupełnienia.
+3) Wybór kontrahenta dokonywany jest pomiędzy Oferentami, których oferty spełniają wszystkie
+wymagania Zamawiającego.
+4) Jeżeli Wykonawca, którego oferta została wybrana, uchyla się od zawarcia umowy w sprawie
+zamówienia Zamawiający wybiera najkorzystniejszą ofertę spośród pozostałych ofert albo może
+anulować postępowanie.
+XI. Anulowanie postępowania
+Zamawiający zastrzega możliwość zakończenia postępowania zakupowego na każdym jego etapie bez
+dokonania wyboru oferty oraz bez podania przyczyny. Z tego tytułu nie przysługują Wykonawcy żadne
+roszczenia wobec Zamawiającego.
+XII. Negocjacje
+1) Zamawiający zastrzega sobie możliwość przeprowadzenia II etapu postępowania w ramach negocjacji
+handlowych, w formie określonej przez Zamawiającego. Podczas negocjacji handlowych Wykonawcy
+mogą złożyć oferty dodatkowe zawierające nowe propozycje w zakresie treści oferty podlegających
+ocenie w ramach kryteriów oceny ofert wskazanych przez Zamawiającego.
+2) Jeżeli przedmiot zamówienia nie uległ zmianie, oferta dodatkowa nie może być mniej korzystna od
+oferty pierwotnej w kryterium oceny ofert.
+3) Pierwotna oferta przestaje wiązać Wykonawcę w zakresie, w jakim złoży on ofertę dodatkową
+zawierającą korzystniejsze propozycje w ramach kryterium oceny ofert.
+4) W przypadku niezłożenia przez Oferenta oferty dodatkowej za wiążącą uważa się ofertę pierwotną
+Oferenta, pod warunkiem, że nie upłynął jeszcze termin związania ofertą pierwotną.
+XIII. Zabezpieczenie
+W prowadzonym postępowaniu Zamawiający nie wymaga wniesienia zabezpieczenia należytego
+wykonania umowy.
+XIV. Zawarcie umowy
+1) Zamawiający zawrze z wybranym Wykonawcą umowę w sprawie zamówienia, zgodną ze wzorem
+stanowiącym załącznik do zapytania ofertowego.
+2) Umowa zostanie zawarta z chwilą podpisania jej przez umocowanych przedstawicieli obu Stron.
+Załączniki:
+1. Wzór umowy
+2. Opis przedmiotu zamówienia
+"""

@@ -13,6 +13,10 @@ import fitz # PyMuPDF, program do czytania tekstu z pdf-ów
 
 #import summarizer
 
+
+
+text_for_AI_to_read = None
+
 def read_pdf_files_text():
     print(f"uruchamiam moduł {__name__}")
 
@@ -46,8 +50,12 @@ def read_pdf_files_text():
                                 page = doc.load_page(page_number)
                                 text += page.get_text("text")
                             print("Tekst z pliku PDF:", text)
+                            global text_for_AI_to_read
+                            text_for_AI_to_read = text
             break  # Przerwij pętlę po znalezieniu pierwszego pasującego pliku zip 
         #!!zmienić - znajdować wszystkie zipy
+
+
 
 # pdf = fitz.open(zip_file_path)
 
