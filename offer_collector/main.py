@@ -37,14 +37,14 @@ import os
 
 REPLICATE_API_TOKEN = 'abc' #placeholder
 
-URL = 'https://connect.orlen.pl/servlet/HomeServlet' #the URL of the page with all the newest offers to collect for the User
+URL = 'https://connect.orlen.pl/servlet/HomeServlet' #the URL of Orlen Connect website, which displays the newest offers to collect for the User
 
 DETAILED_INSTRUCTIONS = None #custom requests from the User - extra feature to be developed in the future
 
 # At the beginning add the options in radio buttons to  
 
 instr_options = {
-                 "DEFAULT": "detect_deposit_and_reqs", # detecting info about an initial deposit or warranty,   wykrywanie informacji czy jest wymagane wadium, gwarancja, 
+                 "DEFAULT": "detect_deposit_and_reqs", # detecting info about an initial deposit or warranty, 
                                                        # and also if there are any extra requirements regarding the contractor 
                                                        # including similar projects created earlier or special qualifications/certificates
                  
@@ -55,8 +55,9 @@ instr_options = {
                 }
 
 
-#options = webdriver.ChromeOptions()
-#options.add_experimental_option("detach", True)
+#options = webdriver.ChromeOptions()             ### to activate later - running the webdriver in a detached state, 
+#options.add_experimental_option("detach", True) ### uncomment after the website interaction procedure is completely programmed 
+                                                
 
 
 
@@ -72,6 +73,7 @@ driver.get(URL)
 # (the list of offers has to be expanded to enable to grab all necessary data) 
 wait = WebDriverWait(driver, 10)
 
+#function to expand a list of displayed offers, working on the Orlen Connect website
 def orlen_expandclicker():
     for licznik in range(1, 6):  # a preliminary test version with 5x click of the "Show More" button - change to expanding till reaching offer gathered during the last operation of this program
         show_more_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[contains(@class, "link-btn") and contains(@class, "link-load-more")]')))
@@ -79,7 +81,8 @@ def orlen_expandclicker():
         time.sleep(3)
 
 
-
+#function builds a DataFrame of all available offers using data scraped with Selenium library from the target website 
+#(working on the Orlen Connect website)
 def BuildingOffersList():
  
     offers = driver.find_elements(By.CLASS_NAME, 'demand-item')
@@ -130,7 +133,7 @@ if __name__ == "__main__":
     ### print(f"ścieżka pliku Python: {Path(__file__)}") ### - they let check, where the program is located and where it writes the files
 
 
-    # the name of the new folder for a csv file with the list of offers that the User can view
+    # the name of the new folder for a csv file with the list of Offers that the User can view
     folder_path = 'folder_na_csv'
 
 

@@ -4,7 +4,6 @@
 import os
 import openai
 #import streamlit  #use it later to extend the functionality and display the ChatGPT's output to the user if necessary
-
 import read_pdfs # module reading texts from the downloaded pdf documents fro each architectural project
 
 text_of_pdfs = read_pdfs.text_for_AI_to_read #pull the function's output from the zaciągnąć wynik funkcji z programu read_pdfs - do dołączenia do ostatecznego query
