@@ -114,86 +114,87 @@ def BuildingOffersList():
     print(offers_df)
     return offers_df
 
+if __name__ == "__main__":
 
-orlen_expandclicker()
+    orlen_expandclicker()
 
-webscraped_offers_df = BuildingOffersList()
-
-
-# establishing the path where the executed .py file is located and changing the working directory to that current path
-dir_path = os.path.dirname(os.path.realpath(__file__))
-os.chdir(dir_path)
+    webscraped_offers_df = BuildingOffersList()
 
 
-### print(f"ścieżka folderu roboczego: {Path.cwd()}") ### - these two lines are to be activated for control/testing purposes
-### print(f"ścieżka pliku Python: {Path(__file__)}") ### - they let check, where the program is located and where it writes the files
+    # establishing the path where the executed .py file is located and changing the working directory to that current path
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(dir_path)
 
 
-# the name of the new folder for a csv file with the list of offers that the User can view
-folder_path = 'folder_na_csv'
+    ### print(f"ścieżka folderu roboczego: {Path.cwd()}") ### - these two lines are to be activated for control/testing purposes
+    ### print(f"ścieżka pliku Python: {Path(__file__)}") ### - they let check, where the program is located and where it writes the files
 
 
-# Checking if the folder exists - if not, creating it 
-if not os.path.exists(folder_path):
-    os.makedirs(folder_path)
-    print(f"Folder o nazwie {folder_path} jeszcze nie istnieje w katalogu roboczym; \ntworzenie nowego folderu {folder_path}...")
+    # the name of the new folder for a csv file with the list of offers that the User can view
+    folder_path = 'folder_na_csv'
 
 
-# Naming the excel file holding the gathered offers, creating the path where the file will be located
-excel_doc_filaname = 'Arkusz_ofert.xlsx'
-excel_doc_path = os.path.join(folder_path, excel_doc_filaname)
+    # Checking if the folder exists - if not, creating it 
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        print(f"Folder o nazwie {folder_path} jeszcze nie istnieje w katalogu roboczym; \ntworzenie nowego folderu {folder_path}...")
 
 
-# importing of the recent sheet, if it exists
-if os.path.isfile(excel_doc_path):
-    # loading the Excel file to the Dataframe object 
-    recent_webscraped_offers_df = pd.read_excel(excel_doc_path)
-    print("Aktualizacja pliku excel...")
-
-    #### newdf=pd.concat([recent_webscraped_offers_df, webscraped_offers_df]).drop_duplicates(keep=False)  # code for obtaining the difference between the new and the old Dataframe 
-
-    # merging the old Dataframe sheet with the new one
-    webscraped_offers_df_new_rows = webscraped_offers_df.merge(recent_webscraped_offers_df, on='numer', how='outer', indicator=True)
-    print(f"Nowy arkusz z indykatorami dla sprawdzenia: {webscraped_offers_df_new_rows}")
-    
-    # Choosing only new rows
-    new_rows = webscraped_offers_df_new_rows.query('_merge == "left_only"').drop(columns=['_merge'])
-
-    # Resulting DataFrame:
-    print(f"nowe oferty: \n{new_rows}")
-
-    # New DataFrame without the indicator column, which will be exported to Excel file: 
-    webscraped_offers_df = webscraped_offers_df.merge(recent_webscraped_offers_df, on='numer', how='outer', indicator=False)
-
-    print(f"Nowy plik excel: {webscraped_offers_df}")
-
-else:
-    # Displaying the info about the absence of the last sheet and about the location where the new one will be created 
-    print(f"Plik o nazwie {excel_doc_filaname} jeszcze nie istnieje w folderze w katalogu roboczym; \ntworzenie nowego pliku w folderze {folder_path}...")
+    # Naming the excel file holding the gathered offers, creating the path where the file will be located
+    excel_doc_filaname = 'Arkusz_ofert.xlsx'
+    excel_doc_path = os.path.join(folder_path, excel_doc_filaname)
 
 
-# Saving the DataFrame to the Excel file in the chosen path 
-webscraped_offers_df.to_excel(excel_doc_path, index=False, sheet_name='Initial_Offers')
-excel_doc_path_abs = os.path.abspath(excel_doc_path)
-print(f"Arkusz Excel został utworzony w folderze {folder_path}.\nŚcieżka pliku: {excel_doc_path_abs}")
+    # importing of the recent sheet, if it exists
+    if os.path.isfile(excel_doc_path):
+        # loading the Excel file to the Dataframe object 
+        recent_webscraped_offers_df = pd.read_excel(excel_doc_path)
+        print("Aktualizacja pliku excel...")
 
-# Path of the CSV file in the newly created folder
-file_path = os.path.join(folder_path, 'offers_table.csv')
-absolute_path = os.path.abspath(file_path)
-#print(f"ścieżka pliku: {absolute_path}")
+        #### newdf=pd.concat([recent_webscraped_offers_df, webscraped_offers_df]).drop_duplicates(keep=False)  # code for obtaining the difference between the new and the old Dataframe 
 
-# Saving the list to a CSV file 
-# webscraped_offers_df.to_csv(file_path, index=False)
-webscraped_offers_df.to_csv(file_path, mode='w', encoding='utf-8-sig', index=False) 
-print(f"Plik CSV został utworzony w folderze {folder_path}.\nŚcieżka pliku: {absolute_path}")
+        # merging the old Dataframe sheet with the new one
+        webscraped_offers_df_new_rows = webscraped_offers_df.merge(recent_webscraped_offers_df, on='numer', how='outer', indicator=True)
+        print(f"Nowy arkusz z indykatorami dla sprawdzenia: {webscraped_offers_df_new_rows}")
+        
+        # Choosing only new rows
+        new_rows = webscraped_offers_df_new_rows.query('_merge == "left_only"').drop(columns=['_merge'])
+
+        # Resulting DataFrame:
+        print(f"nowe oferty: \n{new_rows}")
+
+        # New DataFrame without the indicator column, which will be exported to Excel file: 
+        webscraped_offers_df = webscraped_offers_df.merge(recent_webscraped_offers_df, on='numer', how='outer', indicator=False)
+
+        print(f"Nowy plik excel: {webscraped_offers_df}")
+
+    else:
+        # Displaying the info about the absence of the last sheet and about the location where the new one will be created 
+        print(f"Plik o nazwie {excel_doc_filaname} jeszcze nie istnieje w folderze w katalogu roboczym; \ntworzenie nowego pliku w folderze {folder_path}...")
 
 
-# Append to an existing Excel sheet 
-#with pd.ExcelWriter('arkusz_ofert.xlsx', mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:   
-    # webscraped_offers_df.to_excel(writer, sheet_name='Initial_Offers2') # --> change the code so that it moves the older lines down to make space for the new ones
+    # Saving the DataFrame to the Excel file in the chosen path 
+    webscraped_offers_df.to_excel(excel_doc_path, index=False, sheet_name='Initial_Offers')
+    excel_doc_path_abs = os.path.abspath(excel_doc_path)
+    print(f"Arkusz Excel został utworzony w folderze {folder_path}.\nŚcieżka pliku: {excel_doc_path_abs}")
+
+    # Path of the CSV file in the newly created folder
+    file_path = os.path.join(folder_path, 'offers_table.csv')
+    absolute_path = os.path.abspath(file_path)
+    #print(f"ścieżka pliku: {absolute_path}")
+
+    # Saving the list to a CSV file 
+    # webscraped_offers_df.to_csv(file_path, index=False)
+    webscraped_offers_df.to_csv(file_path, mode='w', encoding='utf-8-sig', index=False) 
+    print(f"Plik CSV został utworzony w folderze {folder_path}.\nŚcieżka pliku: {absolute_path}")
+
+
+    # Append to an existing Excel sheet 
+    #with pd.ExcelWriter('arkusz_ofert.xlsx', mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:   
+        # webscraped_offers_df.to_excel(writer, sheet_name='Initial_Offers2') # --> change the code so that it moves the older lines down to make space for the new ones
 
 
 
-wait = input() # a dummy task to prevent the browser from closing on it's own
+    wait = input() # a dummy task to prevent the browser from closing on it's own
 
 

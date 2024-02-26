@@ -24,7 +24,8 @@ import read_pdfs
 
 ## ## to do - searching for the keywords in the offer's content that could give the information 
 ## ## on the initial deposit (keywords must be of course in the language of the analysed documents - here it's Polish)
-keywords_to_detect = {'wadium', 'akonto', 'forszus', 'gwarancja pieniężna', 'kaucja', 'przedpłata', 'rękojmia', 'zabezpieczenie', 'zadatek', 'zaliczka', 'zastaw'}
+## ## (for an additional check besides the LLM-based analysis, use a Polish language analysis library to automate forr different suffixes)
+## ## KEYWORDS_TO_DETECT = {'wadium', 'akonto', 'forszus', 'gwarancja pieniężna', 'kaucja', 'przedpłata', 'rękojmia', 'zabezpieczenie', 'zadatek', 'zaliczka', 'zastaw'}
 
 
 # Initializing the Chrome browser 
@@ -68,14 +69,14 @@ os.chdir(str(p.parent))
 # Current date and time 
 #current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
-# Creating a new folder for the offer details and printing a notification (Polish user)
+# Creating a new folder for the offer details and printing a message (Polish user)
 docs_folder_name = Path(f'{numer_pobieranej_oferty}_szczegóły_ofertowe')
 print(f"ścieżka z nowymi dokumentami oferty {number_of_donloaded_offer_RAW}: {docs_folder_name}")
 
 #current_offer_path = Path.cwd()
 #print(f"folder w którym zapisana jest oferta numer [dodać automatyczny numer oferty]: {current_offer_path}")
 
-# Checking if the folder exists, creating a new one if a folder of this name isn't found
+# Checking if the folder exists, creating a new one if a folder of this name isn't found (messages in Polish for the User)
 if not docs_folder_name.exists():
     docs_folder_name.mkdir()
     print(f"tworzenie folderu na pobrane szczegóły oferty: {docs_folder_name}")
@@ -101,7 +102,7 @@ print(f"Ścieżka folderu docelowego: {docs_folder_name}")
 dlded_zip_file_name = os.path.basename(latest_folder)
 moved_zip_file_path = os.path.join(docs_folder_name, dlded_zip_file_name)
 
-# Moving the downloaded zipfile to the target folder 
+# Moving the downloaded zipfile to the target folder with messages in Polish for the User
 if not os.path.exists(moved_zip_file_path):
     shutil.move(latest_folder, docs_folder_name)
     print(f'Plik z Pobranych "{latest_folder}" został przeniesiony do "{docs_folder_name}"')
