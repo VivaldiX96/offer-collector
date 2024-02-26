@@ -1,0 +1,10 @@
+docker==7.0.0
+googletrans==4.0.0rc1
+openai==0.28.0
+openpyxl==3.1.2
+operagxdriver==0.10
+pandas==2.1.4
+PyMuPDF==1.23.9
+requests==2.31.0
+selenium==4.16.0
+streamlit==1.30.0
