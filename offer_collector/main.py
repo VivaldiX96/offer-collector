@@ -18,31 +18,6 @@
     # - Sending offers marked with "1" to the folder of offers to consider for the end user
 
 
-# !!! Installed packages (install them in the container - the same set is in the requirements.txt file):
-    # pip install selenium==4.16.0
-    # https://googlechromelabs.github.io/chrome-for-testing/ - https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/win64/chromedriver-win64.zip
-    # pip install openpyxl==3.1.2
-    
-    # node-v20.10.0-x64
-    # pip install --upgrade pymupdf - for text recognition in pdf's 
-    # pip install PyMuPDF==1.23.9 - libraries for PDF's reading by the program; >>> in the .py code modules - "import fitz" (this imports the pymupdf library) 
-    # pip install openai==0.28.0 - for communication with ChatGPT 
-    # pip install streamlit==1.30.0 - for creating the UI with the option of custom instruction for the AI Assistant  
-    # pip install googletrans==4.0.0rc1 - for translations of documents' texts from source language to English to supply the text to interpret by LLAMA2 in the module LLAMA2_query_generator.py 
-    # pip install replicate==0.23.1 - for interactions with AI from the program instead of hand typing 
-    # pip install requests==2.31.0
-    # pip install docker==7.0.0 - a library to connect with docker like with docker commands, needed to send queries to an app in a container and reading answers from it (a dockerized LLM model for example)
-    # pip install operagxdriver==0.10
-    # https://github.com/docker/docker-py
-    
-    # Libraries that are not used yet - consider installing for adding extra functionalities:
-    # pip install beautifulsoup4 - not used, for now selenium is sufficient for the webscraping purposes
-    # pip install pydocker - another way to connect with AI in a container
-    # pip install pillow - to detect images and text in the images, for example to read any scanned documents
-    # pip install python-docx - a library to save documents with a desired style or formatting
-    # pip install pyttsx3 - for speech recognition
-    # pip install SpeechRecognition - -||-
-
 ### Current scope of issues to check: test which tokenizer for LLAMA 2 handles Polish text the best, check how to increase or go around the character number limit in the chat (maybe a suitable tokenizer or langchain might help?)   
 ### some tips on supplying the system prompts:  https://www.youtube.com/watch?v=PqcNqyd13Kw
 ### fine-tuning for language models:  https://www.youtube.com/watch?v=ThKWQcyQXF8
@@ -56,12 +31,15 @@ import streamlit as st
 import pathlib
 import posixpath
 import pandas as pd
+import os
 
 # import webscraper # <- importing the second module of the program 
 
 REPLICATE_API_TOKEN = 'abc' #placeholder
 
-detailed_instructions = None #custom requests from the User - extra feature to be developed in the future
+URL = 'https://connect.orlen.pl/servlet/HomeServlet' #the URL of the page with all the newest offers to collect for the User
+
+DETAILED_INSTRUCTIONS = None #custom requests from the User - extra feature to be developed in the future
 
 # At the beginning add the options in radio buttons to  
 
@@ -72,18 +50,15 @@ instr_options = {
                  
                  "SUMMARY": "offer summary", # a brief summary of the documents 
                  
-                 "GPT_DETAILS": detailed_instructions # detailed instructions from the User to be implemented by AI -
+                 "GPT_DETAILS": DETAILED_INSTRUCTIONS # detailed instructions from the User to be implemented by AI -
                                                       #  - particularly, finding custom details of information on demand 
                 }
-
-
-
 
 
 #options = webdriver.ChromeOptions()
 #options.add_experimental_option("detach", True)
 
-URL = 'https://connect.orlen.pl/servlet/HomeServlet'
+
 
 # Initializing the Chrome browser 
 driver = webdriver.Chrome()
@@ -103,44 +78,46 @@ def orlen_expandclicker():
         show_more_button.click()
         time.sleep(3)
 
+
+
+def BuildingOffersList():
+ 
+    offers = driver.find_elements(By.CLASS_NAME, 'demand-item')
+
+    print(f"Liczba ofert: {len(offers)}")
+
+    offers_table = []
+
+    for offer in offers:
+        
+        offer_number = offer.find_element(By.CLASS_NAME, 'demand-item-details-number').text
+        title = offer.find_element(By.CLASS_NAME, 'demand-item-details-name').text
+        cathegory = offer.find_element(By.CLASS_NAME, 'demand-item-details-category').text
+        link_to_details = offer.find_element(By.CLASS_NAME, 'demand-item-to-details').get_attribute("href")
+        time_remaining = offer.find_element(By.CLASS_NAME, 'demand-item-time').text
+
+        # Polish names for the headers of the table in the sheet that the User will be able to read
+        offer_object = {
+            'numer': offer_number,
+            'tytul': title,
+            'kategoria': cathegory,
+            'link': link_to_details,
+            'pozostaly czas': time_remaining
+        }
+        offers_table.append(offer_object)
+
+    offers_df = pd.DataFrame(offers_table)
+
+    # Filtering the offer objects by their cathegory (only the cathegory "Documentation of technical projects" is of interest to our User)
+    offers_df = offers_df[offers_df.kategoria.str.contains('Dokumentacja - projekty techniczne')]
+    print(f"Liczba ofert z kategorii \"Wykonanie projektów\": {len(offers_df.index)}")
+    print(offers_df)
+    return offers_df
+
+
 orlen_expandclicker()
 
-# webscraper() # start
-
-
- 
-oferty = driver.find_elements(By.CLASS_NAME, 'demand-item')
-
-print(f"Liczba ofert: {len(oferty)}")
-
-offers_table = []
-
-for oferta in oferty:
-    
-    numer_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-number').text
-    tytul_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-name').text
-    kategoria_oferty = oferta.find_element(By.CLASS_NAME, 'demand-item-details-category').text
-    link_do_szczegolow = oferta.find_element(By.CLASS_NAME, 'demand-item-to-details').get_attribute("href")
-    pozostaly_czas = oferta.find_element(By.CLASS_NAME, 'demand-item-time').text
-     
-    offer_object = {
-        'numer': numer_oferty,
-        'tytul': tytul_oferty,
-        'kategoria': kategoria_oferty,
-        'link': link_do_szczegolow,
-        'pozostaly czas': pozostaly_czas
-    }
-    offers_table.append(offer_object)
-
-Orlen_df = pd.DataFrame(offers_table)
-
-# Filtering the offer objects by their cathegory (only Documentation of technical projects interests our User)
-Orlen_df = Orlen_df[Orlen_df.kategoria.str.contains('Dokumentacja - projekty techniczne')]
-print(f"Liczba ofert z kategorii \"Wykonanie projektów\": {len(Orlen_df.index)}")
-print(Orlen_df)
-
-
-import os
+webscraped_offers_df = BuildingOffersList()
 
 
 # establishing the path where the executed .py file is located and changing the working directory to that current path
@@ -152,7 +129,7 @@ os.chdir(dir_path)
 ### print(f"ścieżka pliku Python: {Path(__file__)}") ### - they let check, where the program is located and where it writes the files
 
 
-# the name of the new folder for a csv file with the list of offers
+# the name of the new folder for a csv file with the list of offers that the User can view
 folder_path = 'folder_na_csv'
 
 
@@ -163,42 +140,42 @@ if not os.path.exists(folder_path):
 
 
 # Naming the excel file holding the gathered offers, creating the path where the file will be located
-nazwa_pliku_excel = 'Arkusz_ofert.xlsx'
-sciezka_do_pliku_excel = os.path.join(folder_path, nazwa_pliku_excel)
+excel_doc_filaname = 'Arkusz_ofert.xlsx'
+excel_doc_path = os.path.join(folder_path, excel_doc_filaname)
 
 
 # importing of the recent sheet, if it exists
-if os.path.isfile(sciezka_do_pliku_excel):
+if os.path.isfile(excel_doc_path):
     # loading the Excel file to the Dataframe object 
-    Poprzedni_Orlen_df = pd.read_excel(sciezka_do_pliku_excel)
+    recent_webscraped_offers_df = pd.read_excel(excel_doc_path)
     print("Aktualizacja pliku excel...")
 
-    #### newdf=pd.concat([Poprzedni_Orlen_df, Orlen_df]).drop_duplicates(keep=False)  # code for obtaining the difference between the new and the old Dataframe 
+    #### newdf=pd.concat([recent_webscraped_offers_df, webscraped_offers_df]).drop_duplicates(keep=False)  # code for obtaining the difference between the new and the old Dataframe 
 
     # merging the old Dataframe sheet with the new one
-    Orlen_df_nowe_rzedy = Orlen_df.merge(Poprzedni_Orlen_df, on='numer', how='outer', indicator=True)
-    print(f"Nowy arkusz z indykatorami dla sprawdzenia: {Orlen_df_nowe_rzedy}")
+    webscraped_offers_df_new_rows = webscraped_offers_df.merge(recent_webscraped_offers_df, on='numer', how='outer', indicator=True)
+    print(f"Nowy arkusz z indykatorami dla sprawdzenia: {webscraped_offers_df_new_rows}")
     
     # Choosing only new rows
-    nowe_rzedy = Orlen_df_nowe_rzedy.query('_merge == "left_only"').drop(columns=['_merge'])
+    new_rows = webscraped_offers_df_new_rows.query('_merge == "left_only"').drop(columns=['_merge'])
 
     # Resulting DataFrame:
-    print(f"nowe oferty: \n{nowe_rzedy}")
+    print(f"nowe oferty: \n{new_rows}")
 
     # New DataFrame without the indicator column, which will be exported to Excel file: 
-    Orlen_df = Orlen_df.merge(Poprzedni_Orlen_df, on='numer', how='outer', indicator=False)
+    webscraped_offers_df = webscraped_offers_df.merge(recent_webscraped_offers_df, on='numer', how='outer', indicator=False)
 
-    print(f"Nowy plik excel: {Orlen_df}")
+    print(f"Nowy plik excel: {webscraped_offers_df}")
 
 else:
     # Displaying the info about the absence of the last sheet and about the location where the new one will be created 
-    print(f"Plik o nazwie {nazwa_pliku_excel} jeszcze nie istnieje w folderze w katalogu roboczym; \ntworzenie nowego pliku w folderze {folder_path}...")
+    print(f"Plik o nazwie {excel_doc_filaname} jeszcze nie istnieje w folderze w katalogu roboczym; \ntworzenie nowego pliku w folderze {folder_path}...")
 
 
 # Saving the DataFrame to the Excel file in the chosen path 
-Orlen_df.to_excel(sciezka_do_pliku_excel, index=False, sheet_name='Initial_Offers')
-sciezka_do_pliku_excel_abs = os.path.abspath(sciezka_do_pliku_excel)
-print(f"Arkusz Excel został utworzony w folderze {folder_path}.\nŚcieżka pliku: {sciezka_do_pliku_excel_abs}")
+webscraped_offers_df.to_excel(excel_doc_path, index=False, sheet_name='Initial_Offers')
+excel_doc_path_abs = os.path.abspath(excel_doc_path)
+print(f"Arkusz Excel został utworzony w folderze {folder_path}.\nŚcieżka pliku: {excel_doc_path_abs}")
 
 # Path of the CSV file in the newly created folder
 file_path = os.path.join(folder_path, 'offers_table.csv')
@@ -206,14 +183,14 @@ absolute_path = os.path.abspath(file_path)
 #print(f"ścieżka pliku: {absolute_path}")
 
 # Saving the list to a CSV file 
-# Orlen_df.to_csv(file_path, index=False)
-Orlen_df.to_csv(file_path, mode='w', encoding='utf-8-sig', index=False) 
+# webscraped_offers_df.to_csv(file_path, index=False)
+webscraped_offers_df.to_csv(file_path, mode='w', encoding='utf-8-sig', index=False) 
 print(f"Plik CSV został utworzony w folderze {folder_path}.\nŚcieżka pliku: {absolute_path}")
 
 
 # Append to an existing Excel sheet 
 #with pd.ExcelWriter('arkusz_ofert.xlsx', mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:   
-    # Orlen_df.to_excel(writer, sheet_name='Initial_Offers2') # --> change the code so that it moves the older lines down to make space for the new ones
+    # webscraped_offers_df.to_excel(writer, sheet_name='Initial_Offers2') # --> change the code so that it moves the older lines down to make space for the new ones
 
 
 
