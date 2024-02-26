@@ -6,8 +6,8 @@ import docker
 
 
 ### move this part to the main module later, so that the key is imported only once for the whole program's operation
-ReplicateAPItoken = os.environ["REPLICATE_API_TOKEN"] 
-print(ReplicateAPItoken)
+REPLICATE_API_TOKEN = os.environ["REPLICATE_API_TOKEN"] 
+print(REPLICATE_API_TOKEN)
 ###
 
 
@@ -35,9 +35,8 @@ pyfile_dir = os.path.dirname(__file__)
 
 ##  alternative way of reading the API key - change to this one on target implementation ##
 #from OffersCollector
-#  import Replicate_API_token
-#ReplicateAPItoken = OffersCollector
-# .Replicate_API_token
+#  import REPLICATE_API_TOKEN
+#REPLICATE_API_TOKEN = OffersCollector.REPLICATE_API_TOKEN
 ## uncomment after taking the part from triple hashtags to the main pyfile  ##
 
 with open('AI_test_doc_no_instruction.txt', 'r', encoding='utf-8-sig') as plik: # A testing rreading of a hand-supplied txt doc   
@@ -67,6 +66,8 @@ def Split_into_fragments(doc_text, max_length=3900):
 
 fragmented_doc_pl = Split_into_fragments(doc_text)
 
+
+#These 2 lines are a temporary code to check the result of the text fragmentation
 for index , fragment in enumerate(fragmented_doc_pl):
     print(f"fragment numer {index} w zestawie fragmented_doc_pl:\n{fragment}")
 

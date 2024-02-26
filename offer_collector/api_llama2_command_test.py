@@ -21,3 +21,5 @@ def Ollama_input_query():
     time.sleep(3)
 
 Ollama_input_query()
+
+## expand the module later for web-driver-based contact with the Llama Model
