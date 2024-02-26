@@ -1,2 +1,0 @@
-username = "vivaldix.96@gmail.com"
-password = "SR71Blackbird"
