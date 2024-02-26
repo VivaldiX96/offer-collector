@@ -31,97 +31,103 @@ import read_pdfs
 # Initializing the Chrome browser 
 driver = webdriver.Chrome()
 
-# Webdriver goes to the page containng the list of offers for the Contractor (User) - in this case it is the Orlen's site
-# Downloading the visible dynamic content from the browser using Selenium 
-link = 'https://connect.orlen.pl/app/outRfx/338906/supplier/status' ### change this line later into elastic input from another program  
-driver.get(link)
+link = 'https://connect.orlen.pl/app/outRfx/338906/supplier/status' ### change this line later into elastic input from another program
 
-# Checking the number of the single offer displayed on the site
-number_of_donloaded_offer_RAW = driver.find_element(By.TAG_NAME, 'strong').text    
+def SupplyingOfferId(offer_link):
+    # Webdriver goes to the page containng the list of offers for the Contractor (User) - in this case it is the Orlen's site
+    # Downloading the visible dynamic content from the browser using Selenium 
+      
+    driver.get(offer_link)
 
-# Removing the forbidden characters 
-import re
-numer_pobieranej_oferty = number_of_donloaded_offer_RAW.replace('/', '_')
-numer_pobieranej_oferty =  re.sub(r'[\\/*?:"<>|]', '', numer_pobieranej_oferty)
+    # Checking the number of the single offer displayed on the site
+    id_of_downloaded_offer_RAW = driver.find_element(By.TAG_NAME, 'strong').text    
 
-print(f"numer pobranego folderu (oczyszczony z ukośników): {numer_pobieranej_oferty}")
+    # Removing the forbidden characters 
+    import re
+    id_of_downloaded_offer = id_of_downloaded_offer_RAW.replace('/', '_')
+    id_of_downloaded_offer =  re.sub(r'[\\/*?:"<>|]', '', id_of_downloaded_offer)
 
-# Setting the max waiting time for finding the desired element on the website 
-# (here - a "Download" button that initiates the download of the documents to analyze)
-wait = WebDriverWait(driver, 10)
+    print(f"numer pobranego folderu (oczyszczony z ukośników): {id_of_downloaded_offer}")
+    return id_of_downloaded_offer
 
-# Finding and autoclicking the "Download" button on the page 
-documents_download_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[contains(@class, "pull-right")]')))
+clean_offer_id = SupplyingOfferId(link)
+
+
+# Finding and autoclicking the "Download" button on the page after waiting max 10 seconds
+documents_download_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[contains(@class, "pull-right")]')))
 documents_download_button.click()
 time.sleep(2)
 
-# Establishing the home directory and the Downloads folder path
-Home_dir = Path.home()
-Downloads_dir = Home_dir.joinpath('downloads')
-#print(Downloads_dir)
 
-
-# Changing the working directory to the folder where this module (summarizer.py) is located 
+# Assuring the working directory is the folder where this module (summarizer.py) is located 
 p = Path(__file__)
 os.chdir(str(p.parent)) 
 
-
-# Current date and time 
-#current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-
-# Creating a new folder for the offer details and printing a message (Polish user)
-docs_folder_name = Path(f'{numer_pobieranej_oferty}_szczegóły_ofertowe')
-print(f"ścieżka z nowymi dokumentami oferty {number_of_donloaded_offer_RAW}: {docs_folder_name}")
-
-#current_offer_path = Path.cwd()
-#print(f"folder w którym zapisana jest oferta numer [dodać automatyczny numer oferty]: {current_offer_path}")
-
-# Checking if the folder exists, creating a new one if a folder of this name isn't found (messages in Polish for the User)
-if not docs_folder_name.exists():
-    docs_folder_name.mkdir()
-    print(f"tworzenie folderu na pobrane szczegóły oferty: {docs_folder_name}")
-else:
-    print(f"Folder o nazwie {docs_folder_name} już istnieje!")
+def MovingDownloadedFile(offer_id):
+    # Establishing the home directory and the Downloads folder path
+    Home_dir = Path.home()
+    Downloads_dir = Home_dir.joinpath('downloads')
 
 
-# Downloading the pdf docs and saving them to a new folder assigned to the particular offer 
-# (the offer's ID is automatically attached from the http element from the website)
-
-# Finiding a name of the last downloaded folder (a zip folder is always provided on the website)
-list_of_zips_in_downloads = [dlded_folder.path for dlded_folder in os.scandir(str(Downloads_dir)) if zipfile.is_zipfile(dlded_folder)] # Collecting only zipfiles from the "Downloads" folder 
-latest_folder = max(list_of_zips_in_downloads, key=os.path.getctime) # pinpointing the last downloaded zipfile - it is our folder with the docs to analyze for the User
-
-# print(f"lista wszystkich znalezionych folderów zip: {list_of_zips_in_downloads}") # detection test
-# print(f"ostatni pobrany folder: {latest_folder}") # detection test
+    # Creating a new folder for the offer details and printing a message (Polish user)
+    docs_folder_name = Path(f'{offer_id}_szczegoly_ofertowe')
+    print(f"ścieżka z nowymi dokumentami oferty {offer_id}: {docs_folder_name}")
 
 
-# The full path to the target folder where the docs of a single offer will go 
-print(f"Ścieżka folderu docelowego: {docs_folder_name}")
+    # Checking if the folder exists, creating a new one if a folder of this name isn't found (messages in Polish for the User)
+    if not docs_folder_name.exists():
+        docs_folder_name.mkdir()
+        print(f"tworzenie folderu na pobrane szczegóły oferty: {docs_folder_name}")
+    else:
+        print(f"Folder o nazwie {docs_folder_name} już istnieje!")
 
-# Path to the copied file in the target folder 
-dlded_zip_file_name = os.path.basename(latest_folder)
-moved_zip_file_path = os.path.join(docs_folder_name, dlded_zip_file_name)
 
-# Moving the downloaded zipfile to the target folder with messages in Polish for the User
-if not os.path.exists(moved_zip_file_path):
-    shutil.move(latest_folder, docs_folder_name)
-    print(f'Plik z Pobranych "{latest_folder}" został przeniesiony do "{docs_folder_name}"')
-else:
-    print("Plik o takiej samej nazwie już istnieje w folderze docelowym.")
+    # Downloaded pdf docs are saved to a new folder assigned to the particular offer 
+    # (the offer's ID is automatically attached from the http element from the website)
 
-# Changing the directory from the folder with the new zipfile and extraction of docs 
-os.chdir(str(docs_folder_name)) 
+    # Finding a name of the last downloaded folder (a zip folder is always provided on the website)
+    list_of_zips_in_downloads = [dlded_folder.path for dlded_folder in os.scandir(str(Downloads_dir)) if zipfile.is_zipfile(dlded_folder)] # Collecting only zipfiles from the "Downloads" folder 
+    latest_folder = max(list_of_zips_in_downloads, key=os.path.getctime) # pinpointing the last downloaded zipfile - it is our folder with the docs to analyze for the User
 
-    # Grabbing the list of the files and folders in the current folder 
-fold_contents = os.scandir(os.getcwd())
+    # print(f"list of all found zip folders: {list_of_zips_in_downloads}") # detection test
+    # print(f"the last downloaded folder: {latest_folder}") # detection test
 
-    # finding the name first folder with .zip extension (if it exists) and displaying that name
-    # thhe loop checks for zipfiles 
-for file in fold_contents:
-    if file.is_file() and file.name.endswith('.zip'):
-        zip_file_name = file.name
-        print(f"Znaleziono plik zip o nazwie: {zip_file_name} - wypakowuję...")
-        break  # break after finding the first zipfile 
+    # Path to the copied file in the target folder 
+    dlded_zip_file_name = os.path.basename(latest_folder)
+    moved_zip_file_path = os.path.join(docs_folder_name, dlded_zip_file_name)
+
+    # Moving the downloaded zipfile to the target folder with messages in Polish for the User
+    if not os.path.exists(moved_zip_file_path):
+        shutil.move(latest_folder, docs_folder_name)
+        print(f'Plik z Pobranych "{latest_folder}" został przeniesiony do "{docs_folder_name}"')
+    else:
+        print("Plik o takiej samej nazwie już istnieje w folderze docelowym.")
+    return docs_folder_name
+
+
+
+def unzip(folder_name):
+    # Changing the directory from the folder with the new zipfile and extraction of docs 
+    os.chdir(str(folder_name)) 
+
+        # Grabbing the list of the files and folders in the current folder 
+    folder_contents = os.scandir(os.getcwd())
+
+        # finding the name first folder with .zip extension (if it exists) and displaying that name
+        # thhe loop checks for zipfiles 
+    for file in folder_contents:
+        if file.is_file() and file.name.endswith('.zip'):
+            zip_file_name = file.name
+            print(f"Znaleziono plik zip o nazwie: {zip_file_name} - wypakowuję...")
+            break  # break after finding the first zipfile 
+
+
+
+folder_to_unzip = MovingDownloadedFile(clean_offer_id)
+
+
+
+unzip(folder_to_unzip)
 
 subprocess.run(['python', 'read_pdfs.py'])
 read_pdfs.read_pdf_files_text()
