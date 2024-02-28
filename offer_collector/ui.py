@@ -22,20 +22,20 @@ page = st.radio('Wybierz tryb działania asystenta.' ,
                 captions = radio_button_captions,  index=0) 
 
 
-#def assistant_mode_initialization():
-match page:
-    case 'Tryb domyślny':
-        textarea_disabled = True
-        pass
-    case 'Streszczenie':
-        textarea_disabled = True
-        pass
-    case 'Dostosowane polecenie':
-        textarea_disabled = False
-        pass
-    #case _:  # "_" means a default mode if no other option was chosen before
-        #default_action()  #maybe a default command could be added here later
-    
+def assistantModeInitialization():
+    match page:
+        case 'Tryb domyślny':
+            textarea_disabled = True
+            pass
+        case 'Streszczenie':
+            textarea_disabled = True
+            pass
+        case 'Dostosowane polecenie':
+            textarea_disabled = False
+            pass
+        #case _:  # "_" means a default mode if no other option was chosen before
+            #default_action()  #maybe a default command could be added here later
+        
     
 # Creating a textfield - initially disabled with the variable "textarea_disabled"
 instr_option_field = st.text_area(label='Pusty opis', label_visibility="collapsed", placeholder='Wpisz instrukcję dla Asystenta', disabled=textarea_disabled)

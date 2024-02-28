@@ -8,7 +8,7 @@
         # - Downloading the documents (pdf, doc, etc.) with a detailed description of a single offer  ✓
         # - Reading the text from a single offer  ✓
         # - Detecting the keywords from a chosen set in the downloaded documents - could be done with a speech processing program using linguistic functions 
-        # - Sending the description of the offer to LLM for summarization 
+        # - Sending the docs of the offer to LLM for summarization 
 
         # - Filtering obvious negligible offers based on their titles or cathegories on the website providing the offers for reducing the number of the resulting queries sent to the LLM
 
@@ -74,7 +74,7 @@ driver.get(URL)
 wait = WebDriverWait(driver, 10)
 
 #function to expand a list of displayed offers, working on the Orlen Connect website
-def orlen_expandclicker():
+def orlenExpandclicker():
     for licznik in range(1, 6):  # a preliminary test version with 5x click of the "Show More" button - change to expanding till reaching offer gathered during the last operation of this program
         show_more_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[contains(@class, "link-btn") and contains(@class, "link-load-more")]')))
         show_more_button.click()
@@ -83,7 +83,7 @@ def orlen_expandclicker():
 
 #function builds a DataFrame of all available offers using data scraped with Selenium library from the target website 
 #(working on the Orlen Connect website)
-def BuildingOffersList():
+def buildingOffersList():
  
     offers = driver.find_elements(By.CLASS_NAME, 'demand-item')
 
@@ -100,14 +100,14 @@ def BuildingOffersList():
         time_remaining = offer.find_element(By.CLASS_NAME, 'demand-item-time').text
 
         # Polish names for the headers of the table in the sheet that the User will be able to read
-        offer_object = {
+        offer_line = {
             'numer': offer_number,
             'tytul': title,
             'kategoria': cathegory,
             'link': link_to_details,
             'pozostaly czas': time_remaining
         }
-        offers_table.append(offer_object)
+        offers_table.append(offer_line)
 
     offers_df = pd.DataFrame(offers_table)
 
@@ -119,9 +119,9 @@ def BuildingOffersList():
 
 if __name__ == "__main__":
 
-    orlen_expandclicker()
+    orlenExpandclicker()
 
-    webscraped_offers_df = BuildingOffersList()
+    webscraped_offers_df = buildingOffersList()
 
 
     # establishing the path where the executed .py file is located and changing the working directory to that current path
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
 
     # the name of the new folder for a csv file with the list of Offers that the User can view
-    folder_path = 'folder_na_csv'
+    folder_path = 'folder_na_arkusze'
 
 
     # Checking if the folder exists - if not, creating it 

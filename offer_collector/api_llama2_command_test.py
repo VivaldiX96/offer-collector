@@ -15,11 +15,11 @@ driver.get('localhost:3000')
 # Setting max awaiting time for the driver to detect the expected elements
 wait = WebDriverWait(driver, 10)
 
-def Ollama_input_query():
+def ollamaInputQuery():
     New_chat_button = wait.until(EC.element_to_be_clickable((By.ID, 'sidebar-new-chat-button')))
     New_chat_button.click()
     time.sleep(3)
 
-Ollama_input_query()
+ollamaInputQuery()
 
 ## expand the module later for web-driver-based contact with the Llama Model

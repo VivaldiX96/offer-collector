@@ -14,7 +14,7 @@ import fitz # PyMuPDF, library for reading text from pdf's
 
 text_for_AI_to_read = None
 
-def read_pdf_files_text():
+def readPdfFilesText():
     print(f"uruchamiam moduł {__name__}")
 
     # chacking that the module runs in the folder created for the files which have to be read 

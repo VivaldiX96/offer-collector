@@ -35,7 +35,7 @@ link = 'https://connect.orlen.pl/app/outRfx/338906/supplier/status' ### change t
 
 # function returns an Offer's ID with removed slashes to use as a name for the folder 
 # in which the single Offer's documents will be placed and later analyzed
-def SupplyingOfferId(offer_link):
+def supplyingOfferId(offer_link):
     # Webdriver goes to the page containng the list of offers for the Contractor (User) - in this case it is the Orlen's site
     # Downloading the visible dynamic content from the browser using Selenium 
       
@@ -52,7 +52,7 @@ def SupplyingOfferId(offer_link):
     print(f"number of downloaded folder (free from slashes): {id_of_downloaded_offer}")
     return id_of_downloaded_offer
 
-clean_offer_id = SupplyingOfferId(link)
+clean_offer_id = supplyingOfferId(link)
 
 
 # Finding and autoclicking the "Download" button on the page after waiting max 10 seconds
@@ -67,7 +67,7 @@ os.chdir(str(p.parent))
 
 # function creating a new folder named with the single Offer's ID supplied earlier 
 # and moving the single Offer's files into that folder
-def MovingDownloadedFile(offer_id):
+def movingDownloadedFile(offer_id):
     # Establishing the home directory and the Downloads folder path
     Home_dir = Path.home()
     Downloads_dir = Home_dir.joinpath('downloads')
@@ -127,7 +127,7 @@ def unzip(folder_name):
 
 
 
-folder_to_unzip = MovingDownloadedFile(clean_offer_id)
+folder_to_unzip = movingDownloadedFile(clean_offer_id)
 
 
 

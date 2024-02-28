@@ -2,8 +2,8 @@
 from googletrans import Translator
 import time
 import os
-import docker
-
+# import docker - in case when using dockerized LLM model should be necessary
+import re
 
 ### move this part to the main module later, so that the key is imported only once for the whole program's operation
 REPLICATE_API_TOKEN = os.environ["REPLICATE_API_TOKEN"] 
@@ -13,7 +13,7 @@ print(REPLICATE_API_TOKEN)
 
 
 ## --PROMPTS--
-def send_prompt():
+def sendPrompt():
     pre_prompt = "You are a helpful assistant. You don't respond as 'User' or pretend to be 'User'. You only respond once as 'Assistant'."
     prompt_input = (f"In the text enclosed in triple quotation marks, find important information that provides the answers to the two questions below:
     1. Does the Contractor have to provide any deposit before completing the Employer's order? Answer \"yes\" or \"no\".
@@ -49,7 +49,7 @@ with open('AI_test_doc_no_instruction.txt', 'r', encoding='utf-8-sig') as plik: 
 
 
 # Separating the text into shorter fragments including the end of a paragraph 
-def Split_into_fragments(doc_text, max_length=3900):
+def splitIntoFragments(docIext, max_length=3900):
     fragmented = []
     while doc_text:
         if len(doc_text) <= max_length:
@@ -64,7 +64,7 @@ def Split_into_fragments(doc_text, max_length=3900):
     return fragmented
 
 
-fragmented_doc_pl = Split_into_fragments(doc_text)
+fragmented_doc_pl = splitIntoFragments(doc_text)
 
 
 #These 2 lines are a temporary code to check the result of the text fragmentation
@@ -92,7 +92,6 @@ for index , fragment in enumerate(translated_fragments):
     print(f"fragment numer {index} w zestawie fragmented_doc_pl:\n{fragment}(długość: {len(fragment)} znaków)")
 
 
-import re
 
 # String with the answer from the LLM 
 text_of_AI_answer = "The answer to Question 1 is \"yes\", and the answer to Question 2 is \"no\"."
