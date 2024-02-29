@@ -52,7 +52,7 @@ def supplyingOfferId(offer_link):
     print(f"number of downloaded folder (free from slashes): {id_of_downloaded_offer}")
     return id_of_downloaded_offer
 
-clean_offer_id = supplyingOfferId(link)
+
 
 
 # Finding and autoclicking the "Download" button on the page after waiting max 10 seconds
@@ -109,7 +109,7 @@ def movingDownloadedFile(offer_id):
     return docs_folder_name
 
 
-
+#function unzips the first zipfile in the directory created for a single Offer's docs
 def unzip(folder_name):
     # Changing the directory from the folder with the new zipfile and extraction of docs 
     os.chdir(str(folder_name)) 
@@ -125,11 +125,9 @@ def unzip(folder_name):
             print(f"Znaleziono plik zip o nazwie: {zip_file_name} - wypakowuję...")
             break  # break after finding the first zipfile 
 
-
+clean_offer_id = supplyingOfferId(link)
 
 folder_to_unzip = movingDownloadedFile(clean_offer_id)
-
-
 
 unzip(folder_to_unzip)
 

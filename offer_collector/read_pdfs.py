@@ -14,6 +14,9 @@ import fitz # PyMuPDF, library for reading text from pdf's
 
 text_for_AI_to_read = None
 
+
+## reads text from a single pdf. WARNING: works only for specific cases when there is a pdf directly in the first layer inside the zipfile
+## works in the folder: C:\Coding\WebScraper\examples\scrapped_files\ELOG200083824_szczegoly_ofertowe\1_Opracowanie_dokumentacji
 def readPdfFilesText():
     print(f"uruchamiam moduł {__name__}")
 
@@ -34,9 +37,9 @@ def readPdfFilesText():
             with zipfile.ZipFile(zip_file_path, 'r') as zip_file:
                 # Going through all the files in the zip archive 
                 for file_info in zip_file.infolist():
-                    # Chacking if the file is a pdf
+                    # Checking if the file is a pdf
                     if file_info.filename.endswith(".pdf"):
-                        # Openeing the PDF file without unzipping  
+                        # Opening the PDF file without unzipping  
                         with zip_file.open(file_info) as pdf_file:
                             # Reading the data from the PDF file
                             pdf_data = io.BytesIO(pdf_file.read())
@@ -49,9 +52,11 @@ def readPdfFilesText():
                             print("Tekst z pliku PDF:", text)
                             global text_for_AI_to_read
                             text_for_AI_to_read = text
+                    #else if file_info.filename.endswith(".zip"):   
+                 
             break  # Break the loop after finding the first matching zipfile  
         #!! Change - find all zip's 
 
-
+readPdfFilesText()
 
 # pdf = fitz.open(zip_file_path)

@@ -67,45 +67,61 @@ def splitIntoFragments(docIext, max_length=3900):
 fragmented_doc_pl = splitIntoFragments(doc_text)
 
 
+
 #These 2 lines are a temporary code to check the result of the text fragmentation
 for index , fragment in enumerate(fragmented_doc_pl):
     print(f"fragment numer {index} w zestawie fragmented_doc_pl:\n{fragment}")
 
-# for fragment in fragmented_doc_pl:
-#    print(fragment) 
-
-# Initializing the translator 
-translator = Translator()
-
-# Translated each fragment from source language (Polish) to English 
-translated_fragments = []
-for fragment in fragmented_doc_pl:
-    translated_fragment = translator.translate(fragment, src='pl', dest='en').text.replace("\n", " ")
-    translated_fragments.append(translated_fragment)
-    time.sleep(1) # delay to reduce the risk of blocking Google Translator because of too frequent queries 
 
 
+def textTranslation(fragmented_doc):
+
+    # Initializing the translator 
+    translator = Translator()
+
+    # Translated each fragment from source language (Polish) to English 
+    translated_fragments = []
+    for fragment in fragmented_doc:
+        translated_fragment = translator.translate(fragment, src='pl', dest='en').text.replace("\n", " ")
+        translated_fragments.append(translated_fragment)
+        time.sleep(1) # delay to reduce the risk of blocking Google Translator because of too frequent queries 
 
 
-# CHECK - result as an array
-for index , fragment in enumerate(translated_fragments):
-    print(f"fragment numer {index} w zestawie fragmented_doc_pl:\n{fragment}(długość: {len(fragment)} znaków)")
+    # CHECK - result as an array
+    for index , fragment in enumerate(translated_fragments):
+        print(f"fragment numer {index} w zestawie fragmented_doc_pl:\n{fragment}(długość: {len(fragment)} znaków)")
+
+    return translated_fragments
 
 
+### NOTE: depending on the available number of tokens in the LLM chosen for integration with this program,
+### either the whole text of one doc ought to be sent to the LLM at once, or it should be cut into fragments such as for the Translator.
+### Presumably, the LLM will understand the text will best if the text is not fragmented, but **this is yet subject to test** -
+### - the best solution has to be found among the available language models.
 
-# String with the answer from the LLM 
-text_of_AI_answer = "The answer to Question 1 is \"yes\", and the answer to Question 2 is \"no\"."
 
-# Regexes to detect a "yes" or "no" answer in the LLM's response
-pattern = r'\"(yes|no)\"'
+# function digesting the text of the LLM model's response (whether it is Llama, Chat GPT or any other model) 
+# to detect the word patterns containing "yes" or "no" to return the answers as booleans 
+# to later be saved in the Offers database, assigned to each Offer that is read by the LLM 
+def noteTheAiAnswers(text_of_AI_answer):
 
-# Searching for the answers in the text of the LLM's response
-answers = re.findall(pattern, text_of_AI_answer)
+    # String with the answer from the LLM 
+    ### ATTENTION - this is a dummy text - on the target implementation it is supposed 
+    ### to be imported dynamically from a locally installed LLAMA2 LLM (check out the "llama-cpp-python" library)
+    text_of_AI_answer = "The answer to Question 1 is \"yes\", and the answer to Question 2 is \"no\"."
 
-# Assigning the answers to variables 
-ans_for_question_1 = answers[0]
-ans_for_question_2 = answers[1]
+    # Regexes to detect a "yes" or "no" answer in the LLM's response
+    pattern = r'\"(yes|no)\"'
 
-# Displaying the outcome of LLM's judgement
-print("Odpowiedź na pytanie 1:", ans_for_question_1)
-print("Odpowiedź na pytanie 2:", ans_for_question_2)
+    # Searching for the answers in the text of the LLM's response
+    answers = re.findall(pattern, text_of_AI_answer)
+
+    # Assigning the answers to variables 
+    ans_for_question_1 = answers[0]
+    ans_for_question_2 = answers[1]
+
+    # Displaying the outcome of LLM's judgement
+    print("Odpowiedź na pytanie 1:", ans_for_question_1)
+    print("Odpowiedź na pytanie 2:", ans_for_question_2)
+
+    return ans_for_question_1, ans_for_question_2

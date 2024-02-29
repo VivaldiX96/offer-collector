@@ -1,4 +1,6 @@
-# temporary - in order to run, type this phrase in the terminal: "python -m streamlit run Initial_interface.py"
+# this is a small web UI for initializing the main.py in one of 3 possible modes, chosen by the User. 
+# temporary - before the other initialization modes are developed, 
+# in order to run in the default mode type this phrase in the terminal: "python -m streamlit run Initial_interface.py"
 
 import streamlit as st
 import time
@@ -17,13 +19,13 @@ radio_button_captions = ['przeszukiwanie ofert z wykrywaniem informacji o wadium
 radio_button_options = ['Tryb domyślny', 'Streszczenie', 'Dostosowane polecenie']
 
 # The default mode of assistant's operation under index=0 is the first option - to filter the offers based on the info on the initial deposit and requirements that the contractor  has to fullfill
-page = st.radio('Wybierz tryb działania asystenta.' ,
+welcome_page = st.radio('Wybierz tryb działania asystenta.' ,
                 options = radio_button_options,
                 captions = radio_button_captions,  index=0) 
 
-
+# function to be developed that lets the User choose one of 3 modes of the main program's execution
 def assistantModeInitialization():
-    match page:
+    match welcome_page:
         case 'Tryb domyślny':
             textarea_disabled = True
             pass
