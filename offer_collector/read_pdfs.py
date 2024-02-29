@@ -16,6 +16,10 @@ text_for_AI_to_read = None
 
 
 ## reads text from a single pdf. WARNING: works only for specific cases when there is a pdf directly in the first layer inside the zipfile
+## problems with the raw zipfiles from the website to solve:
+    ## 1. the folders structure is chaotic - the documents are on different levels for each Offer, sometimes there are zips inside zips
+    ## 2. the paths in some of the downloaded folders are longer than 260 characters - some folders can't be reached
+    ## 3. some pdf documents have text only in raster form - introduce an additional method for text recognition
 ## works in the folder: C:\Coding\WebScraper\examples\scrapped_files\ELOG200083824_szczegoly_ofertowe\1_Opracowanie_dokumentacji
 def readPdfFilesText():
     print(f"uruchamiam moduł {__name__}")
