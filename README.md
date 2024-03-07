@@ -1,3 +1,9 @@
+I have been creating a virtual assistant that gathers job offers for
+architects and then reads, analyzes, and assigns a classification to
+the documents tied to each offer to reduce the human workload
+required to find new job offers that fulfill the needs of a small
+company.
+
 **THE PLAN OF THE PROGRAM WRITTEN FOR GATHERING DATA FROM THE PAGE https://connect.orlen.pl/servlet/HomeServlet:**
 
      - A clicker of the "Show more" button on the webscraped page  ✓
